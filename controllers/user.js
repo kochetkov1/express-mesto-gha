@@ -6,7 +6,7 @@ export const getUsers = (req, res) => {
     .then((users) => {
       res.send(users);
     })
-    .catch((err) => {
+    .catch(() => {
       res
         .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
         .send({ message: "На севрере произошла ошибка" });

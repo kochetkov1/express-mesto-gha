@@ -74,12 +74,10 @@ export const addLikeCard = (req, res) => {
           .status(constants.HTTP_STATUS_BAD_REQUEST)
           .send({ message: "Введенные данные некорректны" });
       } else {
-        res
-          .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({
-            message:
-              "Произошла ошибка на сервере при постановки лайка на карточку",
-          });
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({
+          message:
+            "Произошла ошибка на сервере при постановки лайка на карточку",
+        });
       }
     });
 };
@@ -105,12 +103,9 @@ export const deleteLikeCard = (req, res) => {
           .status(constants.HTTP_STATUS_BAD_REQUEST)
           .send({ message: "Введенные данные некорректны" });
       } else {
-        res
-          .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({
-            message:
-              "Произошла ошибка на сервере при удалении лайка на карточке",
-          });
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({
+          message: "Произошла ошибка на сервере при удалении лайка на карточке",
+        });
       }
     });
 };

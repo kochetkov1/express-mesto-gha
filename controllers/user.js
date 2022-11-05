@@ -7,11 +7,11 @@ export const getUsers = (req, res) => {
       res.send(users);
     })
     .catch((err) => {
-      res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'На севрере произошла ошибка' });
+      res
+        .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+        .send({ message: "На севрере произошла ошибка" });
     });
 };
-
-// На севрере произошла ошибка
 
 export const getUser = (req, res) => {
   User.findById(req.params.userId)

@@ -99,11 +99,11 @@ export const updateUser = (req, res) => {
   })
   .catch((err) => {
     if (err.name === 'ValidationError') {
-      // res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные поиска' });
-      responseBadRequestError(res, err.message);
+      res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные поиска' });
+      // responseBadRequestError(res, err.message);
     } else {
-      // res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка сервера' });
-      responseServerError(res, err.message);
+      res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка сервера' });
+      // responseServerError(res, err.message);
     }
   });
 };
@@ -121,11 +121,11 @@ export const updateAvatar = (req, res) => {
   })
   .catch((err) => {
     if (err.name === 'ValidationError') {
-      // res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные поиска' });
-      responseBadRequestError(res, err.message);
+      res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные поиска' });
+      // responseBadRequestError(res, err.message);
     } else {
-      // res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка сервера' });
-      responseServerError(res, err.message);
+      res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка сервера' });
+      // responseServerError(res, err.message);
     }
   });
 };

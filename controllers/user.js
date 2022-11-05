@@ -31,10 +31,18 @@ export const getUsers = (req, res) => {
 };
 
 export const getUser = (req, res) => {
-  User.findById(req.params.id)
-    .then((user) => {
+  // console.log('йади', req.params.userId);
+  User.findById(req.params.userId)
+  // console.log('юзверь', user);
+  .then((user) => {
+    if (user) {
       res.send(user);
-    })
+      // console.log('юзверь', user);
+    } else {
+      responseNotFound(res, err.message);
+      // console.log('юзверь', user);
+    }
+  })
     .catch((err) => {
       responseServerError(res, err.message);
     });

@@ -13,13 +13,6 @@ const responseServerError = (res, message) =>
     },
   ]);
 
-const responseNotFound = (res, message) =>
-  res.status(constants.HTTP_STATUS_NOT_FOUND).send([
-    {
-      message: `Не удалось найти пользователя.  ${message}`,
-    },
-  ]);
-
 export const getUsers = (req, res) => {
   User.find({})
     .then((users) => {

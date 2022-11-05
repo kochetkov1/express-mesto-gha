@@ -1,46 +1,23 @@
 import { constants } from "http2";
 import { Card } from "../models/card.js";
 
-const responseBadRequestError = (res, message) =>
-  res.status(constants.HTTP_STATUS_BAD_REQUEST).send({
-    message: `Некорректные данные для карточки.  ${message}`,
-  });
-
-const responseServerError = (res, message) =>
-  res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send([
-    {
-      message: `На севрере произошла ошибка.  ${message}`,
-    },
-  ]);
-
-const responseNotFound = (res, message) =>
-  res.status(constants.HTTP_STATUS_NOT_FOUND).send([
-    {
-      message: `Не удалось найти карточку.  ${message}`,
-    },
-  ]);
-
 export const getCards = (req, res) => {
   Card.find({})
-    .then((cards) => {
-      res.send(cards);
-    })
-    .catch((err) => {
-      responseServerError(res, err.message);
-    });
+  .then((cards) => res.send({ data: cards }))
+  .catch(() => {
+    res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка выгрузки карточек с сервера' });
+  });
 };
 
 export const createCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => {
-      res.send(card);
-    })
+    .then((card) => res.send(card))
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        responseBadRequestError(res, err.message);
+      if (err.name === 'ValidationError') {
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные' });
       } else {
-        responseServerError(res, err.message);
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка сервера' });
       }
     });
 };
@@ -51,14 +28,14 @@ export const deleteCard = (req, res) => {
       if (card) {
         res.send(card);
       } else {
-        responseNotFound(res, err.message);
+        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Карточка не найдена' });
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        responseBadRequestError(res, err.message);
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные' });
       } else {
-        responseServerError(res, err.message);
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка удаление карточки с сервера' });
       }
     });
 };
@@ -66,21 +43,21 @@ export const deleteCard = (req, res) => {
 export const addLikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-    { new: true }
+    { $addToSet: { likes: req.user._id } },
+    { new: true },
   )
     .then((card) => {
       if (card) {
         res.send(card);
       } else {
-        responseNotFound(res, err.message);
+        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Карточка не найдена' });
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        responseBadRequestError(res, err.message);
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные' });
       } else {
-        responseServerError(res, err.message);
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка постановки лайка на карточку на сервере' });
       }
     });
 };
@@ -88,21 +65,21 @@ export const addLikeCard = (req, res) => {
 export const deleteLikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } }, // убрать _id из массива
+    { $pull: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => {
       if (card) {
         res.send(card);
       } else {
-        responseNotFound(res, err.message);
+        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Карточка не найдена' });
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
-        responseBadRequestError(res, err.message);
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные' });
       } else {
-        responseServerError(res, err.message);
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка удаления лайка с карточки на сервере' });
       }
     });
 };

@@ -33,21 +33,44 @@ export const getUsers = (req, res) => {
 export const getUser = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
-      console.log(user);
       if (user) {
         res.send({ data: user });
       } else {
-        responseNotFound(res, err.message);
+        res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Пользователь не найден' });
+        // responseNotFound(res, err.message);
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
+        // res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные поиска' });
         responseBadRequestError(res, err.message);
       } else {
+        // res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ message: 'Произошла ошибка сервера' });
         responseServerError(res, err.message);
       }
     });
 };
+
+// export const getUser = (req, res) => {
+//   // User.findById(req.params.userId)
+//     User.find({ _id: req.params.userId })
+//     .then((user) => {
+//      // console.log(user);
+//       if (user) {
+//         console.log(user);
+//         res.send(user);
+//       } else {
+//         responseNotFound(res, err.message);
+//       }
+//     })
+//     .catch((err) => {
+//       if (err.name === "CastError") {
+//         responseBadRequestError(res, err.message);
+//       } else {
+//         responseServerError(res, err.message);
+//       }
+//     });
+// };
 
 export const createUser = (req, res) => {
   User.create(req.body)

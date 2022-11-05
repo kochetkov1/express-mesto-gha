@@ -31,7 +31,8 @@ export const getCards = (req, res) => {
 };
 
 export const createCard = (req, res) => {
-  Card.create(req.body)
+  const { name, link } = req.body;
+  Card.create({ name, link, owner: req.user._id })
     .then((card) => {
       res.send(card);
     })

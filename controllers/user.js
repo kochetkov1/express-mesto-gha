@@ -31,20 +31,21 @@ export const getUsers = (req, res) => {
 };
 
 export const getUser = (req, res) => {
-  // console.log('йади', req.params.userId);
   User.findById(req.params.userId)
-  // console.log('юзверь', user);
-  .then((user) => {
-    if (user) {
-      res.send(user);
-      // console.log('юзверь', user);
-    } else {
-      responseNotFound(res, err.message);
-      // console.log('юзверь', user);
-    }
-  })
+    .then((user) => {
+      console.log(user);
+      if (user) {
+        res.send({ data: user });
+      } else {
+        responseNotFound(res, err.message);
+      }
+    })
     .catch((err) => {
-      responseServerError(res, err.message);
+      if (err.name === "CastError") {
+        responseBadRequestError(res, err.message);
+      } else {
+        responseServerError(res, err.message);
+      }
     });
 };
 

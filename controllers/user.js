@@ -91,14 +91,14 @@ export const updateUser = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
   .then((user) => {
     if (user) {
-      res.send({ data: user });
+      res.send(user);
     } else {
       res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Пользователь не найден' });
       // responseNotFound(res, err.message);
     }
   })
   .catch((err) => {
-    if (err.name === 'CastError') {
+    if (err.name === 'ValidationError') {
       // res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные поиска' });
       responseBadRequestError(res, err.message);
     } else {
@@ -113,14 +113,14 @@ export const updateAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
   .then((user) => {
     if (user) {
-      res.send({ data: user });
+      res.send(user);
     } else {
       res.status(constants.HTTP_STATUS_NOT_FOUND).send({ message: 'Пользователь не найден' });
       // responseNotFound(res, err.message);
     }
   })
   .catch((err) => {
-    if (err.name === 'CastError') {
+    if (err.name === 'ValidationError') {
       // res.status(constants.HTTP_STATUS_BAD_REQUEST).send({ message: 'Введены некорректные данные поиска' });
       responseBadRequestError(res, err.message);
     } else {

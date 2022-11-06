@@ -1,5 +1,5 @@
-import { constants } from "http2";
-import { User } from "../models/user.js";
+import { constants } from 'http2';
+import { User } from '../models/user.js';
 
 export const getUsers = (req, res) => {
   User.find({})
@@ -9,7 +9,7 @@ export const getUsers = (req, res) => {
     .catch(() => {
       res
         .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-        .send({ message: "На севрере произошла ошибка" });
+        .send({ message: 'На севрере произошла ошибка' });
     });
 };
 
@@ -21,18 +21,18 @@ export const getUser = (req, res) => {
       } else {
         res
           .status(constants.HTTP_STATUS_NOT_FOUND)
-          .send({ message: "Такого пользователя не существует" });
+          .send({ message: 'Такого пользователя не существует' });
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         res
           .status(constants.HTTP_STATUS_BAD_REQUEST)
-          .send({ message: "Введенные данные некорректны" });
+          .send({ message: 'Введенные данные некорректны' });
       } else {
         res
           .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({ message: "На севрере произошла ошибка" });
+          .send({ message: 'На севрере произошла ошибка' });
       }
     });
 };
@@ -43,14 +43,14 @@ export const createUser = (req, res) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         res
           .status(constants.HTTP_STATUS_BAD_REQUEST)
-          .send({ message: "Введенные данные некорректны" });
+          .send({ message: 'Введенные данные некорректны' });
       } else {
         res
           .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({ message: "На севрере произошла ошибка" });
+          .send({ message: 'На севрере произошла ошибка' });
       }
     });
 };
@@ -64,18 +64,18 @@ export const updateUser = (req, res) => {
       } else {
         res
           .status(constants.HTTP_STATUS_NOT_FOUND)
-          .send({ message: "Такого пользователя не существует" });
+          .send({ message: 'Такого пользователя не существует' });
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         res
           .status(constants.HTTP_STATUS_BAD_REQUEST)
-          .send({ message: "Введенные данные некорректны" });
+          .send({ message: 'Введенные данные некорректны' });
       } else {
         res
           .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({ message: "На севрере произошла ошибка" });
+          .send({ message: 'На севрере произошла ошибка' });
       }
     });
 };
@@ -89,18 +89,18 @@ export const updateAvatar = (req, res) => {
       } else {
         res
           .status(constants.HTTP_STATUS_NOT_FOUND)
-          .send({ message: "Такого пользователя не существует" });
+          .send({ message: 'Такого пользователя не существует' });
       }
     })
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         res
           .status(constants.HTTP_STATUS_BAD_REQUEST)
-          .send({ message: "Введенные данные некорректны" });
+          .send({ message: 'Введенные данные некорректны' });
       } else {
         res
           .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({ message: "На севрере произошла ошибка" });
+          .send({ message: 'На севрере произошла ошибка' });
       }
     });
 };

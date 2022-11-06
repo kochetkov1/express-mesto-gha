@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { Schema } from "mongoose";
+import mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -28,4 +28,4 @@ const cardSchema = new mongoose.Schema({
   },
 });
 
-export const Card = mongoose.model("Card", cardSchema);
+export const Card = mongoose.model('Card', cardSchema);

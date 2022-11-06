@@ -3,7 +3,7 @@
   "author": "kochetkov1",
   "version": "1.0.0",
   "type": "module",
-  "description": "[![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)\r # Проект Mesto фронтенд + бэкенд",
+  "description": "Проект Mesto фронтенд + бэкенд",
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
@@ -21,12 +21,8 @@
   "homepage": "https://github.com/kochetkov1/express-mesto-gha#readme",
   "devDependencies": {
     "eslint": "^8.2.0",
-    "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.2",
-    "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-react": "^7.28.0",
-    "eslint-plugin-react-hooks": "^4.3.0",
     "nodemon": "^2.0.20"
   },
   "dependencies": {

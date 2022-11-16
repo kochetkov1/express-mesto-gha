@@ -1,9 +1,14 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { constants } from 'http2';
 import bodyParser from 'body-parser';
+import { errors } from 'celebrate';
 import { userRouter } from './routes/userRouter.js';
 import { cardRouter } from './routes/cardRouter.js';
+import { createUser, login } from './controllers/user.js';
+import { auth } from './middlewares/auth.js';
+import { userBodyValidator, userLoginValidator } from './utils/validators.js';
+import { errorMessages } from './utils/errorMessages.js';
+import { NotFoundError } from './errors/NotFoundError.js';
 
 const app = express();
 
@@ -15,21 +20,33 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '63652cbed4f346d9c2d88b8d',
-  };
+// app.use((req, res, next) => {
+//   req.user = {
+//     _id: '63652cbed4f346d9c2d88b8d',
+//   };
 
-  next();
+//   next();
+// });
+
+// Вызов роутов авторизации и регистрации (доступны до авторизации)
+app.post('/signin', userLoginValidator, login);
+app.post('/signup', userBodyValidator, createUser);
+
+// Вызов авторизации (все, что ниже - доступно только для авторизованных пользователей)
+// app.use(auth);
+
+app.use('/users', auth, userRouter);
+app.use('/cards', auth, cardRouter);
+
+app.all('/*', (req, res, next) => {
+  next(new NotFoundError(errorMessages.incorrectRoute));
 });
 
-app.use('/', userRouter);
-app.use('/', cardRouter);
+app.use(errors());
 
-app.all('/*', (req, res) => {
-  res
-    .status(constants.HTTP_STATUS_NOT_FOUND)
-    .send({ message: 'Такой страницы не существует' });
+app.use((err, req, res, next) => {
+  res.status(err.statusCode).send({ message: err.message });
+  next();
 });
 
 app.listen(PORT, () => {

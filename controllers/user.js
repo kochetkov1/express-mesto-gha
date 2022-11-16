@@ -1,106 +1,158 @@
-import { constants } from 'http2';
-import { User } from '../models/user.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
-export const getUsers = (req, res) => {
+import { User } from '../models/user.js';
+import { BadRequestError } from '../errors/BadRequestError.js';
+import { ConflictError } from '../errors/ConflictError.js';
+import { NotFoundError } from '../errors/NotFoundError.js';
+import { ServerError } from '../errors/ServerError.js';
+import { errorMessages } from '../utils/errorMessages.js';
+
+export const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
       res.send(users);
     })
-    .catch(() => {
-      res
-        .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-        .send({ message: 'На севрере произошла ошибка' });
-    });
+    .catch((err) => next(new ServerError(err.message)));
 };
 
-export const getUser = (req, res) => {
+export const getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (user) {
         res.send({ data: user });
       } else {
-        res
-          .status(constants.HTTP_STATUS_NOT_FOUND)
-          .send({ message: 'Такого пользователя не существует' });
+        next(new NotFoundError(errorMessages.userNotFound));
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res
-          .status(constants.HTTP_STATUS_BAD_REQUEST)
-          .send({ message: 'Введенные данные некорректны' });
+        next(new BadRequestError(errorMessages.userBadRequest));
       } else {
-        res
-          .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({ message: 'На севрере произошла ошибка' });
+        next(new ServerError(err.message));
       }
     });
 };
 
-export const createUser = (req, res) => {
-  User.create(req.body)
+export const getCurrentUser = (req, res, next) => {
+  const id = req.params.id === 'me' ? req.user._id : req.params.id;
+  User.findById({ id })
     .then((user) => {
-      res.send(user);
+      if (user) {
+        res.send({ data: user });
+      } else {
+        next(new NotFoundError(errorMessages.userNotFound));
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError(errorMessages.userBadRequest));
+      } else {
+        next(new ServerError(err.message));
+      }
+    });
+};
+
+// export const createUser = (req, res) => {
+//   User.create(req.body)
+//     .then((user) => {
+//       res.send(user);
+//     })
+//     .catch((err) => {
+//       if (err.name === 'ValidationError') {
+//         res
+//           .status(constants.HTTP_STATUS_BAD_REQUEST)
+//           .send({ message: 'Введенные данные некорректны' });
+//       } else {
+//         res
+//           .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+//           .send({ message: 'На сервере произошла ошибка' });
+//       }
+//     });
+// };
+
+export const createUser = (req, res, next) => {
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body;
+
+  bcrypt
+    .hash(password, 10)
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
+    .then((document) => {
+      const user = document.toObject();
+      delete user.password;
+      res.send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
-          .status(constants.HTTP_STATUS_BAD_REQUEST)
-          .send({ message: 'Введенные данные некорректны' });
+        next(new BadRequestError(errorMessages.userBadRequest));
+      } else if (err.code === 11000) {
+        next(new ConflictError(errorMessages.userConflict));
       } else {
-        res
-          .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({ message: 'На севрере произошла ошибка' });
+        next(new ServerError(err.message));
       }
     });
 };
 
-export const updateUser = (req, res) => {
+export const updateUser = (req, res, next) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
-    .then((user) => {
-      if (user) {
-        res.send(user);
-      } else {
-        res
-          .status(constants.HTTP_STATUS_NOT_FOUND)
-          .send({ message: 'Такого пользователя не существует' });
-      }
-    })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, about },
+    { new: true, runValidators: true },
+  )
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
-          .status(constants.HTTP_STATUS_BAD_REQUEST)
-          .send({ message: 'Введенные данные некорректны' });
+        next(new BadRequestError(errorMessages.userBadRequest));
       } else {
-        res
-          .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({ message: 'На севрере произошла ошибка' });
+        next(new ServerError(err.message));
       }
     });
 };
 
-export const updateAvatar = (req, res) => {
+export const updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
-    .then((user) => {
-      if (user) {
-        res.send(user);
-      } else {
-        res
-          .status(constants.HTTP_STATUS_NOT_FOUND)
-          .send({ message: 'Такого пользователя не существует' });
-      }
-    })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { avatar },
+    { new: true, runValidators: true },
+  )
+    .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
-          .status(constants.HTTP_STATUS_BAD_REQUEST)
-          .send({ message: 'Введенные данные некорректны' });
+        next(new BadRequestError(errorMessages.userBadRequest));
       } else {
-        res
-          .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-          .send({ message: 'На севрере произошла ошибка' });
+        next(new ServerError(err.message));
+      }
+    });
+};
+
+export const login = (req, res, next) => {
+  const { email, password } = req.body;
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'super-secret-key', {
+        expiresIn: '7d',
+      });
+      res.send({ token });
+    })
+    .catch((err) => {
+      if (err.name === 'UnauthorizedError') {
+        next(err);
+      } else {
+        next(new ServerError(err.message));
       }
     });
 };

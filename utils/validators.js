@@ -29,7 +29,7 @@ export const userBodyValidator = celebrate({
 
 export const userIdValidator = celebrate({
   params: Joi.object().keys({
-    userId: schemeObjectId.required().equal('me'),
+    userId: Joi.string().hex().length(24),
   }),
 });
 

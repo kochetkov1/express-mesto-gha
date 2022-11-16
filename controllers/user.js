@@ -19,6 +19,7 @@ export const getUsers = (req, res, next) => {
 export const getUser = (req, res, next) => {
   // console.log(req.user._id);
   // User.findById(req.params.userId)
+  // мб поменять -------------------------------------------------
   User.findById(req.user._id)
     .then((user) => {
       if (user) {
@@ -39,10 +40,9 @@ export const getUser = (req, res, next) => {
 export const getCurrentUser = (req, res, next) => {
   const id = (req.params.userId === 'me') ? req.user._id : req.params.userId;
   // убрать
-  // console.log(id);
+  console.log(id);
   User.findById({ id })
     .then((user) => {
-      // console.log(id);
       if (user) {
         res.send({ data: user });
       } else {

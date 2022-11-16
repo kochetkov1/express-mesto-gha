@@ -35,9 +35,8 @@ export const getUser = (req, res, next) => {
 };
 
 export const getCurrentUser = (req, res, next) => {
-  // const id = req.params.id === 'me' ? req.user._id : req.params.id;
-  // User.findById({ id })
-  User.findById(req.user._id)
+  const id = (req.params.userId === 'me') ? req.user._id : req.params.userId;
+  User.findById({ id })
     .then((user) => {
       if (user) {
         res.send({ data: user });

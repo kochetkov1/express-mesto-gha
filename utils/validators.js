@@ -36,9 +36,9 @@ export const userBodyValidator = celebrate({
 export const userIdValidator = celebrate({
   params: Joi.object().keys({
     userId: Joi.alternatives()
-      .try(Joi.string().equal('me'), Joi.string().hex().length(24))
-      .required(),
-  }),
+      .try(Joi.string().alphanum(), Joi.string().hex().length(24)).required(),
+  }).required(),
+
 });
 
 export const userLoginValidator = celebrate({

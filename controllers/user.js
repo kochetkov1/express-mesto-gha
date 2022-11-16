@@ -17,10 +17,10 @@ export const getUsers = (req, res, next) => {
 };
 
 export const getUser = (req, res, next) => {
-  // console.log(req.user._id);
+  console.log(req.params.userId);
   // User.findById(req.params.userId)
   // мб поменять -------------------------------------------------
-  User.findById(req.user._id)
+  User.findById(req.params.userId)
     .then((user) => {
       if (user) {
         res.send({ data: user });
@@ -45,6 +45,7 @@ export const getCurrentUser = (req, res, next) => {
     .then((user) => {
       if (user) {
         res.send({ data: user });
+        console.log({ data: user });
       } else {
         next(new NotFoundError(errorMessages.userNotFound));
       }

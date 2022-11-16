@@ -32,7 +32,6 @@ export const auth = (req, res, next) => {
 
   try {
     payload = jwt.verify(token, 'super-secret-key');
-    console.log('tototo');
   } catch (err) {
     console.log('hohoho');
     next(new UnauthorizedError(err.message));

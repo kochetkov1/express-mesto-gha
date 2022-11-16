@@ -23,6 +23,7 @@ export const auth = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
+    console.log('yoyoyo');
     return next(new UnauthorizedError(errorMessages.needAuthorize));
   }
 
@@ -31,7 +32,9 @@ export const auth = (req, res, next) => {
 
   try {
     payload = jwt.verify(token, 'super-secret-key');
+    console.log('tototo');
   } catch (err) {
+    console.log('hohoho');
     next(new UnauthorizedError(err.message));
   }
 

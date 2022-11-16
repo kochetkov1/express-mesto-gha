@@ -61,8 +61,6 @@ userSchema.statics.findUserByCredentials = function (email, password) {
         if (!matched) {
           return Promise.reject(new UnauthorizedError(errorMessages.unauthorized));
         }
-        // const user = document.toObject();
-        // delete user.password;
         return user;
       });
     });

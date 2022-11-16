@@ -20,21 +20,11 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// app.use((req, res, next) => {
-//   req.user = {
-//     _id: '63652cbed4f346d9c2d88b8d',
-//   };
-
-//   next();
-// });
-
 // Вызов роутов авторизации и регистрации (доступны до авторизации)
 app.post('/signin', userLoginValidator, login);
 app.post('/signup', userBodyValidator, createUser);
 
-// Вызов авторизации (все, что ниже - доступно только для авторизованных пользователей)
-// app.use(auth);
-
+// Все, что ниже - доступно только для авторизованных пользователей
 app.use('/users', auth, userRouter);
 app.use('/cards', auth, cardRouter);
 

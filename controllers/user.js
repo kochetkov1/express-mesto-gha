@@ -35,8 +35,9 @@ export const getUser = (req, res, next) => {
 };
 
 export const getCurrentUser = (req, res, next) => {
-  const id = req.params.id === 'me' ? req.user._id : req.params.id;
-  User.findById({ id })
+  // const id = req.params.id === 'me' ? req.user._id : req.params.id;
+  // User.findById({ id })
+  User.findById(req.user._id)
     .then((user) => {
       if (user) {
         res.send({ data: user });
@@ -52,24 +53,6 @@ export const getCurrentUser = (req, res, next) => {
       }
     });
 };
-
-// export const createUser = (req, res) => {
-//   User.create(req.body)
-//     .then((user) => {
-//       res.send(user);
-//     })
-//     .catch((err) => {
-//       if (err.name === 'ValidationError') {
-//         res
-//           .status(constants.HTTP_STATUS_BAD_REQUEST)
-//           .send({ message: 'Введенные данные некорректны' });
-//       } else {
-//         res
-//           .status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-//           .send({ message: 'На сервере произошла ошибка' });
-//       }
-//     });
-// };
 
 export const createUser = (req, res, next) => {
   const {

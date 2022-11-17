@@ -21,6 +21,7 @@ import { UnauthorizedError } from '../errors/UnauthorizedError.js';
 
 export const auth = (req, res, next) => {
   const { authorization } = req.headers;
+  console.log(req.params);
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
     console.log('yoyoyo');

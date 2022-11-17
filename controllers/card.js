@@ -25,7 +25,6 @@ export const createCard = (req, res, next) => {
 };
 
 export const deleteCard = (req, res, next) => {
-  console.log(req.params);
   Card.findById(req.params.cardId)
     .then((document) => {
       if (document) {

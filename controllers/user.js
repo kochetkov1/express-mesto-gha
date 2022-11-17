@@ -17,9 +17,6 @@ export const getUsers = (req, res, next) => {
 };
 
 export const getUser = (req, res, next) => {
-  console.log(req.params.userId);
-  // User.findById(req.params.userId)
-  // мб поменять -------------------------------------------------
   User.findById(req.params.userId)
     .then((user) => {
       if (user) {
@@ -38,14 +35,10 @@ export const getUser = (req, res, next) => {
 };
 
 export const getCurrentUser = (req, res, next) => {
-  // const id = (req.params.userId === 'me') ? req.user._id : req.params.userId;
-  // убрать
-  console.log(req.user._id);
   User.findById(req.user._id)
     .then((user) => {
       if (user) {
         res.send({ data: user });
-        console.log({ data: user });
       } else {
         next(new NotFoundError(errorMessages.userNotFound));
       }
@@ -131,7 +124,6 @@ export const login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      console.log({ _id: user._id });
       const token = jwt.sign({ _id: user._id }, 'super-secret-key', {
         expiresIn: '7d',
       });

@@ -36,7 +36,6 @@ app.use(errors());
 
 app.use((err, req, res, next) => {
   res.status(err.statusCode).send({ message: err.message });
-  console.log('app error');
   next();
 });
 
